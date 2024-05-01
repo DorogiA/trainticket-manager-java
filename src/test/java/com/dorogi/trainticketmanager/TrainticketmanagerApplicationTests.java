@@ -1,4 +1,4 @@
-package com.dorogi.trainticketmanagerjava;
+package com.dorogi.trainticketmanager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

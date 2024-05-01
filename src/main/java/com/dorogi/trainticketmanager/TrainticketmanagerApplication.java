@@ -1,4 +1,4 @@
-package com.dorogi.trainticketmanagerjava;
+package com.dorogi.trainticketmanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
