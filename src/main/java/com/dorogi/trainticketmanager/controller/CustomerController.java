@@ -13,9 +13,9 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping("/customer/get/{id}")
-    public ResponseEntity<String> searchCustomer(@PathVariable String id) {
-        String customer = customerService.findCustomer(id);
-        return ResponseEntity.status(200).body(customer);
+    public ResponseEntity<SimpleMessageDTO> searchCustomer(@PathVariable String id) {
+        SimpleMessageDTO simpleMessageDTO = customerService.findCustomer(id);
+        return ResponseEntity.status(200).body(simpleMessageDTO);
     }
 
     @PostMapping("/customer/add")

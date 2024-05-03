@@ -16,10 +16,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomerService {
     private final CustomerRepository customerRepository;
 
-    public String findCustomer(String id) {
+    public SimpleMessageDTO findCustomer(String id) {
         CustomerEntity customerEntity = customerRepository.findById(Long.parseLong(id))
                 .orElseThrow(() -> new RuntimeException());
-        return customerEntity.toString();
+        String message = "Customer with ID " + id + ": " + customerEntity.toString();
+        SimpleMessageDTO response = SimpleMessageDTO
+                .builder()
+                .message(message)
+                .build();
+        log.info("Searched: " + message);
+        return response;
     }
 
     @Transactional
@@ -39,6 +45,7 @@ public class CustomerService {
     }
 
     private Boolean isEmailAlreadyPresent(String email) {
+        log.info("Searching emails");
         return customerRepository
                 .findByEmail(email)
                 .isPresent();
@@ -46,6 +53,7 @@ public class CustomerService {
 
     private CustomerEntity createCustomerEntity(CustomerRegistrationDTO customerRegistrationDTO) {
         Integer starterBalance = 1;
+        log.info("Creating new customer");
         return CustomerEntity
                 .builder()
                 .name(customerRegistrationDTO.getName())
