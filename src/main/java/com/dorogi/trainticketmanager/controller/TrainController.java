@@ -1,7 +1,6 @@
 package com.dorogi.trainticketmanager.controller;
 
 import com.dorogi.trainticketmanager.domain.dto.TrainDTO;
-import com.dorogi.trainticketmanager.domain.entity.TrainEntity;
 import com.dorogi.trainticketmanager.service.TrainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +15,8 @@ public class TrainController {
     private final TrainService trainService;
 
     @GetMapping("/train/get")
-    public ResponseEntity<List<TrainEntity>> searchTrains() {
-        List<TrainEntity> foundTrains = trainService.findTrains();
+    public ResponseEntity<List<TrainDTO>> searchTrains() {
+        List<TrainDTO> foundTrains = trainService.findTrains();
         return ResponseEntity.status(200).body(foundTrains);
     }
 }

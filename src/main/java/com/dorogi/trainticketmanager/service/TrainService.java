@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -15,9 +16,24 @@ import java.util.List;
 public class TrainService {
     private final TrainRepository trainRepository;
 
-    public List<TrainEntity> findTrains() {
+    public List<TrainDTO> findTrains() {
         List<TrainEntity> foundTrains = trainRepository.findAll();
-        return foundTrains;
+        List<TrainDTO> mappedTrains = mapTrainEntityToDTO(foundTrains);
+        return mappedTrains;
+    }
+
+    private List<TrainDTO> mapTrainEntityToDTO(List<TrainEntity> trainEntities) {
+        return trainEntities.stream()
+                .map(trainEntity -> trainToDTO(trainEntity))
+                .collect(Collectors.toList());
+    }
+
+    private TrainDTO trainToDTO(TrainEntity trainEntity) {
+        return TrainDTO
+                .builder()
+                .id(trainEntity.getId().toString())
+                .trainName(trainEntity.getTrainName())
+                .build();
     }
 
 }
