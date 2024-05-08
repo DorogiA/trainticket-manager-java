@@ -5,7 +5,7 @@ import com.dorogi.trainticketmanager.domain.entity.CustomerEntity;
 import com.dorogi.trainticketmanager.domain.entity.TicketEntity;
 import com.dorogi.trainticketmanager.exceptions.*;
 import com.dorogi.trainticketmanager.repository.CustomerRepository;
-import com.dorogi.trainticketmanager.repository.TicketReporitory;
+import com.dorogi.trainticketmanager.repository.TicketRepository;
 import com.dorogi.trainticketmanager.repository.TrainRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.time.Year;
 @RequiredArgsConstructor
 public class CustomerService {
     private final CustomerRepository customerRepository;
-    private final TicketReporitory ticketReporitory;
+    private final TicketRepository ticketRepository;
     private final TrainRepository trainRepository;
 
     @Transactional
@@ -150,7 +150,7 @@ public class CustomerService {
                         .atMonth(Integer.parseInt(buyTicketDTO.getMonth()))
                         .atDay(Integer.parseInt(buyTicketDTO.getDay())))
                 .build();
-        ticketEntity = ticketReporitory.save(ticketEntity);
+        ticketEntity = ticketRepository.save(ticketEntity);
         String message = "Added new ticket to database with values " + ticketEntity.toString() + ". You can use your ID at inspection.";
         log.info(message);
         return message;
