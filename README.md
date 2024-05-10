@@ -1,10 +1,10 @@
-# Trainticket Manager
+# Train Ticket Manager
 
 ## Java Portfolio Project
 
 ---
 
-Version 0.4
+Version 0.5
 
 ---
 
@@ -21,6 +21,13 @@ Version 0.4
 ---
 
 ### Concept:
+
+A backend part of a web app, ticket purchasing for a few specific trains trough REST endpoints.
+Both path variables and JSONs are used to transmit information.  
+Costumers can register to get an ID, upload balance (sadly not with real money transactions yet), 
+and use that balance to purchase a ticket for a specific train, on a specific day. 
+All of this is saved in an in-memory database.  
+Train conductors can check for a valid ticket trough checking the customers ID. 
 
 ---
 ### How to run:
@@ -40,7 +47,7 @@ After the IDE recognised the project, you have 2 options:
 ***OR***
 
 1. Search Main class **src/main/java/com/dorogi/trainticketmanager/TrainticketmanagerApplication.java** and open it.
-2. Press green play button on the left, at the line 7 or 9, it should automatically configure itself and start application.
+2. Press green play button on the left, at the line 7 or 9, it could automatically configure itself and start application.
 
 ---
 
@@ -48,6 +55,86 @@ After the IDE recognised the project, you have 2 options:
 
 The following REST endpoints are available, after starting the application (Program to test E.g.: Postman):
 
-1. **e**
+1. **Get all trains:**
 
-> GET localhost:8080/
+> GET localhost:8080/train/get
+
+*Lists all available trains to chose from.*
+
+2. **Register new customer:**
+
+> POST localhost:8080/customer/add
+
+*You have to paste a JSON in the Request Body, in the format of*
+
+```
+{
+    "name": "{name}",
+    "email": "{email}"
+}
+```
+
+*where you have to replace  
+`{name}` with any name you like,  
+`{email}` with any email address you like, it is not checked.  
+all new customers get 1 free balance.*
+
+3. **Add balance**
+
+> PUT localhost:8080/customer/balance
+
+*You have to paste a JSON in the Request Body, in the format of*
+
+```
+{
+    "id": "{id}",
+    "amount": "{amount}"
+}
+```
+
+*where you have to replace  
+`{id}` with the chosen customer ID in numeric value,  
+`{amount}` with the chosen amount to add in numeric value.*
+
+4. **Buy ticket**
+
+> POST localhost:8080/customer/ticket
+
+*You have to paste a JSON in the Request Body, int the format of*
+
+```
+{
+    "customerId": "{customerID}",
+    "trainId": "{trainID}",
+    "year": "{year}",
+    "month": "{month}",
+    "day": "{day}"
+}
+```
+
+*where you have to replace  
+`{customerID}` with the chosen customer ID in numeric value,  
+`{trainID}` with the chosen train ID in numeric value,  
+`{year}` with the chosen year in numeric value,  
+`{month}` with the chosen month in numeric value,  
+`{day}` with the chosen day in numeric value.*
+
+5. **Check for ticket as conductor**
+
+> GET localhost:8080/conductor/{id}
+
+*You have to replace the  
+`{id}` with any numeric value.  
+To get a `VALID` feedback, you have to have a ticket in the database 
+with the date of today, any other case gives back `NO VALID TICKET` as feedback.*
+
+6. **Search for a specific customer as manager**
+
+> GET localhost:8080/manager/get-customer/{id}
+
+*You have to replace the  
+`{id}` with any numeric value.  
+Preferably `1` or `2` or `3` or `4` to get values from preloaded database.*
+
+
+---

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ManagerController {
     private final ManagerService managerService;
 
-    @GetMapping("/customer/get/{id}")
+    @GetMapping("/manager/get-customer/{id}")
     public ResponseEntity<SimpleMessageDTO> searchCustomer(@PathVariable String id) {
         SimpleMessageDTO simpleMessageDTO = managerService.findCustomer(id);
         return ResponseEntity.status(200).body(simpleMessageDTO);

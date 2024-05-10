@@ -26,6 +26,7 @@ public class ConductorService {
         else {
             message = "VALID " + ticketEntity.toString();
         }
+        log.info(id + " " + message);
         return SimpleMessageDTO
                 .builder()
                 .message(message)
