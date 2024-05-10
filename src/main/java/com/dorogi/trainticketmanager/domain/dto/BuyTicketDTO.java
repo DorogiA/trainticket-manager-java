@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 @Builder
 public class BuyTicketDTO {
-    private String customerId;
-    private String trainId;
-    private String year;
-    private String month;
-    private String day;
+    private Long customerId;
+    private Long trainId;
+    private Integer year;
+    private Integer month;
+    private Integer day;
 }

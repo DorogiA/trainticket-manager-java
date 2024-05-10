@@ -14,7 +14,7 @@ public class ConductorController {
     private final ConductorService conductorService;
 
     @GetMapping("/conductor/{id}")
-    public ResponseEntity<SimpleMessageDTO> checkTicketValidity(@PathVariable String id) {
+    public ResponseEntity<SimpleMessageDTO> checkTicketValidity(@PathVariable Long id) {
         SimpleMessageDTO simpleMessageDTO = conductorService.checkTicketValidity(id);
         return  ResponseEntity.status(200).body(simpleMessageDTO);
     }

@@ -31,7 +31,7 @@ public class TrainService {
     private TrainDTO trainToDTO(TrainEntity trainEntity) {
         return TrainDTO
                 .builder()
-                .id(trainEntity.getId().toString())
+                .id(trainEntity.getId())
                 .trainName(trainEntity.getTrainName())
                 .build();
     }

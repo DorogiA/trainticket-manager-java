@@ -15,9 +15,9 @@ import java.time.LocalDate;
 public class ConductorService {
     private final TicketRepository ticketRepository;
 
-    public SimpleMessageDTO checkTicketValidity(String id) {
+    public SimpleMessageDTO checkTicketValidity(Long id) {
         TicketEntity ticketEntity = ticketRepository
-                .findValidTicket(Long.parseLong(id), LocalDate.now())
+                .findValidTicket(id, LocalDate.now())
                 .orElse(null);
         String message;
         if (ticketEntity == null) {

@@ -14,7 +14,7 @@ public class ManagerController {
     private final ManagerService managerService;
 
     @GetMapping("/manager/get-customer/{id}")
-    public ResponseEntity<SimpleMessageDTO> searchCustomer(@PathVariable String id) {
+    public ResponseEntity<SimpleMessageDTO> searchCustomer(@PathVariable Long id) {
         SimpleMessageDTO simpleMessageDTO = managerService.findCustomer(id);
         return ResponseEntity.status(200).body(simpleMessageDTO);
     }

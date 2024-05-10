@@ -43,9 +43,9 @@ public class CustomerService {
     @Transactional
     public SimpleMessageDTO addBalanceToCustomer(CustomerTransactionDTO customerTransactionDTO) {
         CustomerEntity customerEntity = customerRepository
-                .findById(Long.parseLong(customerTransactionDTO.getId()))
+                .findById(customerTransactionDTO.getId())
                 .orElseThrow(() -> new NoEntityFoundException("Customer ID: " + customerTransactionDTO.getId()));
-        customerEntity.setBalance(customerEntity.getBalance() + Integer.parseInt(customerTransactionDTO.getAmount()));
+        customerEntity.setBalance(customerEntity.getBalance() + customerTransactionDTO.getAmount());
         customerRepository.save(customerEntity);
         String message = "Added balance to customer with ID " + customerTransactionDTO.getId() + ". New balance: " + customerEntity.getBalance();
         log.info(message);
@@ -57,10 +57,10 @@ public class CustomerService {
 
     public MessageWithTicketIDDTO buyTicketForCustomer(BuyTicketDTO buyTicketDTO) {
         if (!checkIfCustomerIsPresent(buyTicketDTO.getCustomerId())) {
-            throw new NoEntityFoundException(buyTicketDTO.getCustomerId());
+            throw new NoEntityFoundException(buyTicketDTO.getCustomerId().toString());
         }
         if (!checkIfTrainIsPresent(buyTicketDTO.getTrainId())) {
-            throw new NoEntityFoundException(buyTicketDTO.getTrainId());
+            throw new NoEntityFoundException(buyTicketDTO.getTrainId().toString());
         }
         checkIfDatesAreAcceptable(buyTicketDTO);
         String balanceMessage = removeBalance(buyTicketDTO.getCustomerId());
@@ -91,46 +91,39 @@ public class CustomerService {
                 .build();
     }
 
-    private Boolean checkIfCustomerIsPresent(String customerId) {
+    private Boolean checkIfCustomerIsPresent(Long customerId) {
         log.info("Checking if customer is present");
-        try {
-            return customerRepository
-                    .findById(Long.parseLong(customerId))
-                    .isPresent();
-        } catch (NumberFormatException numberFormatException) {
-            throw new IdNotAcceptableException(customerId);
-        }
+        return customerRepository
+                .findById(customerId)
+                .isPresent();
     }
 
-    private Boolean checkIfTrainIsPresent(String trainId) {
+    private Boolean checkIfTrainIsPresent(Long trainId) {
         log.info("Checking if train is present");
-        try {
-            return trainRepository
-                    .findById(Long.parseLong(trainId))
-                    .isPresent();
-        } catch (NumberFormatException numberFormatException) {
-            throw new IdNotAcceptableException(trainId);
-        }
+        return trainRepository
+                .findById(trainId)
+                .isPresent();
+
     }
 
     private void checkIfDatesAreAcceptable(BuyTicketDTO buyTicketDTO) {
         log.info("Checking if dates are acceptable");
         try {
-            Year.parse(buyTicketDTO.getYear())
-                    .atMonth(Integer.parseInt(buyTicketDTO.getMonth()))
-                    .atDay(Integer.parseInt(buyTicketDTO.getDay()));
+            Year.of(buyTicketDTO.getYear())
+                    .atMonth(buyTicketDTO.getMonth())
+                    .atDay(buyTicketDTO.getDay());
         } catch (DateTimeException dateTimeException) {
             throw new DateNotAcceptableException(buyTicketDTO.getYear() + " or " + buyTicketDTO.getMonth() + " or " + buyTicketDTO.getDay());
         }
     }
 
     @Transactional
-    private String removeBalance(String customerId) {
+    private String removeBalance(Long customerId) {
         CustomerEntity customerEntity = customerRepository
-                .findById(Long.parseLong(customerId))
+                .findById(customerId)
                 .orElseThrow(() -> new NoEntityFoundException("Customer ID: " + customerId));
         if (customerEntity.getBalance() < 1) {
-            throw new NotEnoughBalanceException(customerId);
+            throw new NotEnoughBalanceException(customerId.toString());
         }
         customerEntity.setBalance(customerEntity.getBalance() - 1);
         customerRepository.save(customerEntity);
@@ -143,12 +136,12 @@ public class CustomerService {
     private String buyTicket(BuyTicketDTO buyTicketDTO) {
         TicketEntity ticketEntity = TicketEntity
                 .builder()
-                .customerId(Long.parseLong(buyTicketDTO.getCustomerId()))
-                .trainId(Long.parseLong(buyTicketDTO.getTrainId()))
+                .customerId(buyTicketDTO.getCustomerId())
+                .trainId(buyTicketDTO.getTrainId())
                 .purchaseTime(LocalDate.now())
-                .validity(Year.parse(buyTicketDTO.getYear())
-                        .atMonth(Integer.parseInt(buyTicketDTO.getMonth()))
-                        .atDay(Integer.parseInt(buyTicketDTO.getDay())))
+                .validity(Year.of(buyTicketDTO.getYear())
+                        .atMonth(buyTicketDTO.getMonth())
+                        .atDay(buyTicketDTO.getDay()))
                 .build();
         ticketEntity = ticketRepository.save(ticketEntity);
         String message = "Added new ticket to database with values " + ticketEntity.toString() + ". You can use your ID at inspection.";
